@@ -19,7 +19,7 @@ export class GithubService {
   searchRepositories(query: string) {
     return this.octokit.rest.search.repos({
       q: query,
-      sort: 'stars',
+      sort: 'updated',
       order: 'desc',
       per_page: 10,
     });
@@ -29,7 +29,7 @@ export class GithubService {
     return from(
       this.octokit.rest.search.repos({
         q: query,
-        sort: 'stars',
+        sort: 'updated',
         order: 'desc',
         page,
         per_page,
@@ -94,6 +94,8 @@ export class GithubService {
       // Step 1: Perform a search for issues and pull requests with the given query in their titles
       this.octokit.rest.search.issuesAndPullRequests({
         q: `${query} in:title type:issue`, // Searches for issues with the query in their titles
+        sort:'updated',
+        order:'desc',
         page, // Specify the page for pagination
         per_page, // Number of results per page
       })

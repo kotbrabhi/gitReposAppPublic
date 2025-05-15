@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, linkedSignal, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, linkedSignal, signal, ViewChild } from '@angular/core';
 import { GithubService } from '../../core/github.service';
 import { FormsModule } from '@angular/forms';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -66,7 +66,7 @@ export class ReposComponent {
 
   displayedColumns = ['index', 'avatar', 'name', 'created_at'];
 
-  constructor(private github: GithubService, private router: Router, private storageService: StorageWithExpiryService) { }
+  constructor(private github: GithubService, private cdr: ChangeDetectorRef, private router: Router, private storageService: StorageWithExpiryService) { }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
@@ -126,6 +126,7 @@ export class ReposComponent {
           // Updates the retrieved repositories
           this.allRepos.update(prev => [...prev, ...newItems]);
           this.dataSource.data = this.allRepos();
+          this.dataSource.sort = this.sort;
 
           this.page.update(p => p + 1); // Moves to the next page
         },

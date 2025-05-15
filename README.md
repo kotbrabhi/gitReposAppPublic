@@ -1,59 +1,69 @@
-# GitReposApp
+# GitHub Explorer – Technical Test
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.1.
+## 🚀 Getting Started
 
-## Development server
-
-To start a local development server, run:
+To run the project locally:
 
 ```bash
-ng serve
+git clone https://github.com/kotbrabhi/gitReposAppPublic.git
+cd gitReposAppPublic
+npm install
+npm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Project Architecture
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+The application follows a modular and scalable structure, using best practices of Angular 19:
 
 ```bash
-ng generate component component-name
+src/
+├── app/
+│   ├── core/
+│   │   └── services/
+│   ├── shared/
+│   │   ├── components/
+│   │   ├── pipes/
+│   │   ├── models/
+│   ├── features/
+│   │   ├── repos/
+│   │   └── commits/
+│   └── app.routes.ts
+├── environments/
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+
+## Features Implemented
+
+This Angular app consists of two lazy-loaded routes: /repos and /commits.
 
 ```bash
-ng generate --help
+📌 /repos – Repository Search
+Search GitHub repositories:
+by name
+optionally by language and minimum stars
+by keyword inside issue titles (open/closed)
+Table displays:
+repository name
+owner's avatar
+creation date
+Clicking a row redirects to /commits for the selected repository.
+📌 /commits – Commit History
+Search and display commits of a selected repository
+Table includes:
+commit author
+commit message
+commit URL
 ```
 
-## Building
-
-To build the project run:
+## Tools & Techniques Used
 
 ```bash
-ng build
+RxJS : Used in Github.service.ts to handle data retrieval and transformations using observable operators.
+Signals : Used in the /repos and /commits components to manage search form states and display results reactively.
+Reusable Search Component : search-form.component.ts created to provide a consistent and reusable interface for search inputs.
+Recursive Pipe : A custom pipe that allows deep searching inside nested objects, enabling flexible filtering across complex data structures.
+Infinite Scroll : Implemented to fetch additional results automatically as the user scrolls.
+LocalStorage with Expiry : A dedicated service stores the last search results with a 15-minute expiration to provide continuity between sessions.
+GitHub Token Management : The GitHub token is externalized in the environment.ts file and never committed to version control. This ensures sensitive credentials remain secure.
+Angular Material : Used for a polished and accessible UI through ready-to-use Material components.
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

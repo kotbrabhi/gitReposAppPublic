@@ -1,5 +1,5 @@
 <mat-card class="p-6 rounded-xl shadow-md w-full bg-gray-50">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+    <form [formGroup]="form" (submit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
 
         <!-- Radio Group -->
         <mat-radio-group formControlName="searchMode" class="flex flex-col gap-2 col-span-1">

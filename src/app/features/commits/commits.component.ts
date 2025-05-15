@@ -7,9 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { RecursiveFilterPipe } from '../../pipe/recursive-filter.pipe';
+import { RecursiveFilterPipe } from '../../shared/pipes/recursive-filter.pipe';
 import { FormsModule } from '@angular/forms';
-import { Commit } from '../../models/commit.model';
+import { Commit } from '../../shared/models/commit.model';
 
 @Component({
   selector: 'app-commits',

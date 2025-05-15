@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Octokit } from '@octokit/rest';
 import { environment } from '../../environments/environments';
 import { catchError, forkJoin, from, map, Observable, of, switchMap } from 'rxjs';
-import { Commit } from '../models/commit.model';
-import { Repository } from '../models/repository.model';
+import { Commit } from '../shared/models/commit.model';
+import { Repository } from '../shared/models/repository.model';
 
 @Injectable({
   providedIn: 'root',

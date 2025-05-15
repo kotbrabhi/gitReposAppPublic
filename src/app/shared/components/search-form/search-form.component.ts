@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { StorageWithExpiryService } from '../../../core/storage-with-expiry.service';
-import { SearchModel } from '../../../models/search.model';
+import { SearchModel } from '../../models/search.model';
 
 const STORAGE_KEY = 'github-search';
 

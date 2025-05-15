@@ -13,9 +13,9 @@ import { Router } from '@angular/router';
 import { MatRadioModule } from '@angular/material/radio';
 import { from, Observable } from 'rxjs';
 import { StorageWithExpiryService } from '../../core/storage-with-expiry.service';
-import { SearchFormComponent } from '../shared/search-form/search-form.component';
-import { Repository } from '../../models/repository.model';
-import { SearchModel } from '../../models/search.model';
+import { SearchFormComponent } from '../../shared/components/search-form/search-form.component';
+import { Repository } from '../../shared/models/repository.model';
+import { SearchModel } from '../../shared/models/search.model';
 import { DatePipe } from '@angular/common';
 
 const STORAGE_KEY = 'github-search';
@@ -123,7 +123,7 @@ export class ReposComponent{
           this.page.update(p => p + 1);
         },
         error: (err) => {
-          console.error('Erreur lors de la recherche:', err);
+          console.error('Search error:', err);
           this.hasMore.set(false);
         },
         complete: () => {
@@ -131,7 +131,7 @@ export class ReposComponent{
         }
       });
     } catch (err) {
-      console.error('Erreur lors de la recherche:', err);
+      console.error('Search error:', err);
     }
   }
 

@@ -1,0 +1,38 @@
+<mat-card class="p-6 rounded-xl shadow-md w-full bg-gray-50">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+
+        <!-- Radio Group -->
+        <mat-radio-group formControlName="searchMode" class="flex flex-col gap-2 col-span-1">
+            <mat-radio-button value="byName">By Repository Name</mat-radio-button>
+            <mat-radio-button value="byText">By Issue Title</mat-radio-button>
+        </mat-radio-group>
+
+        <!-- Keyword -->
+        <mat-form-field appearance="outline" class="col-span-1">
+            <mat-label>Keyword</mat-label>
+            <input matInput formControlName="query" />
+        </mat-form-field>
+
+        <!-- Conditional fields -->
+        @if(searchMode === 'byName'){
+        <ng-container>
+            <mat-form-field appearance="outline" class="col-span-1">
+                <mat-label>Language</mat-label>
+                <input matInput formControlName="language" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-span-1">
+                <mat-label>Minimum Stars</mat-label>
+                <input matInput type="number" formControlName="minStars" />
+            </mat-form-field>
+        </ng-container>
+        }
+
+        <!-- Button -->
+        <div class="col-span-1 flex items-center justify-end md:col-span-1">
+            <button mat-raised-button color="primary" type="submit" class="px-6 py-2 rounded-full">
+                🔍 <span class="ml-2 font-semibold">Search</span>
+            </button>
+        </div>
+    </form>
+</mat-card>

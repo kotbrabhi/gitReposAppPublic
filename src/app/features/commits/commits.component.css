@@ -1,0 +1,14 @@
+.go-back-button-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+table {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.mat-card {
+    padding: 20px;
+}

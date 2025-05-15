@@ -39,7 +39,7 @@ const STORAGE_KEY = 'github-search';
   templateUrl: './repos.component.html',
   styleUrl: './repos.component.css'
 })
-export class ReposComponent{
+export class ReposComponent {
   @ViewChild(MatSort) sort!: MatSort;
 
   searchMode = signal('byName');
@@ -55,7 +55,8 @@ export class ReposComponent{
   allRepos = signal<Repository[]>([]);
   dataSource = new MatTableDataSource<Repository>([]);
 
-  // Linked signal: fullQuery
+  // Signal linked to construct the complete search query
+  // Combines search criteria: name, language, and minimum stars
   fullQuery = linkedSignal(() => {
     let q = this.query().trim();
     if (this.language()) q += ` language:${this.language()}`;
@@ -65,7 +66,7 @@ export class ReposComponent{
 
   displayedColumns = ['index', 'avatar', 'name', 'created_at'];
 
-  constructor(private github: GithubService, private router: Router,private storageService: StorageWithExpiryService) { }
+  constructor(private github: GithubService, private router: Router, private storageService: StorageWithExpiryService) { }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
@@ -91,16 +92,19 @@ export class ReposComponent{
     this.search();
   }
 
+  // Main search method
+  // - Resets results if "reset" is true
+  // - Uses RxJS to handle pagination and API responses
   search(reset: boolean = true) {
-    if (this.loading()) return;
+    if (this.loading()) return; // Prevents simultaneous searches
 
     if (reset) {
-      this.allRepos.set([]);
-      this.page.set(1);
+      this.allRepos.set([]); // Resets the results
+      this.page.set(1); // Resets pagination
       this.hasMore.set(true);
     }
 
-    this.loading.set(true);
+    this.loading.set(true); // Activates the loader
 
     try {
       let response$: Observable<Repository[]>;
@@ -111,24 +115,26 @@ export class ReposComponent{
         response$ = this.github.searchRepositoriesByIssueTitlePerPage(this.fullQuery(), this.page(), this.perPage);
       }
 
+      // Subscribes to the RxJS observable to handle results
       response$.subscribe({
         next: (response) => {
           const newItems = response;
           if (newItems.length < this.perPage) {
-            this.hasMore.set(false);
+            this.hasMore.set(false); // Disables infinite scrolling if no more results
           }
 
+          // Updates the retrieved repositories
           this.allRepos.update(prev => [...prev, ...newItems]);
           this.dataSource.data = this.allRepos();
 
-          this.page.update(p => p + 1);
+          this.page.update(p => p + 1); // Moves to the next page
         },
         error: (err) => {
-          console.error('Search error:', err);
+          console.error('Search error:', err); // Logs errors
           this.hasMore.set(false);
         },
         complete: () => {
-          this.loading.set(false);
+          this.loading.set(false); // Deactivates the loader
         }
       });
     } catch (err) {
@@ -159,7 +165,7 @@ export class ReposComponent{
       language: this.language(),
       minStars: this.minStars(),
     };
-    this.storageService.setItem(STORAGE_KEY, searchData, 15*60*1000);
+    this.storageService.setItem(STORAGE_KEY, searchData, 15 * 60 * 1000);
 
     const owner = repo.owner.login;
     const name = repo.name;

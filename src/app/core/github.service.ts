@@ -25,7 +25,7 @@ export class GithubService {
     });
   }
 
-  searchRepositoriesPerPage(query: string, page = 1, per_page = 30):Observable <Repository[]> {
+  searchRepositoriesPerPage(query: string, page = 1, per_page = 30): Observable<Repository[]> {
     return from(
       this.octokit.rest.search.repos({
         q: query,
@@ -39,12 +39,12 @@ export class GithubService {
         response.data.items.map((repo) => ({
           id: repo.id,
           full_name: repo.full_name,
-          name:repo.name,
+          name: repo.name,
           description: repo.description,
           language: repo.language,
           stargazers_count: repo.stargazers_count,
           html_url: repo.html_url,
-          created_at:repo.created_at,
+          created_at: repo.created_at,
           owner: {
             login: repo?.owner?.login ?? '',
             avatar_url: repo?.owner?.avatar_url ?? '',
@@ -84,27 +84,39 @@ export class GithubService {
     });
   }
 
+  // Method to search repositories by keywords in issue titles
+  // - Uses the Octokit REST API to search issues and pull requests
+  // - Extracts unique repository URLs from the search results
+  // - Fetches detailed repository information for each unique URL
+
   searchRepositoriesByIssueTitlePerPage(query: string, page = 1, per_page = 30): Observable<Repository[]> {
     return from(
+      // Step 1: Perform a search for issues and pull requests with the given query in their titles
       this.octokit.rest.search.issuesAndPullRequests({
-        q: `${query} in:title type:issue`,
-        page,
-        per_page,
+        q: `${query} in:title type:issue`, // Searches for issues with the query in their titles
+        page, // Specify the page for pagination
+        per_page, // Number of results per page
       })
     ).pipe(
+      // Step 2: Extract unique repository URLs from the search results
       map((result) =>
         Array.from(
-          new Set(result.data.items.map((item) => item.repository_url))
+          new Set(result.data.items.map((item) => item.repository_url)) // Ensures each URL is unique
         )
       ),
+      // Step 3: Fetch repository details for each unique URL
       switchMap((repoUrls) => {
-        if (repoUrls.length === 0) return of([]);
+        if (repoUrls.length === 0) return of([]); // If no URLs, return an empty array
+
+        // Create an array of requests to fetch repository details
         const repoRequests = repoUrls.map((url) =>
           from(this.octokit.request(`GET ${url}`)).pipe(
-            map((res) => res.data),
-            catchError(() => of(null))
+            map((res) => res.data), // Extract repository data from the response
+            catchError(() => of(null)) // Handle errors gracefully by returning null for failed requests
           )
         );
+
+        // Use forkJoin to execute all repository fetch requests in parallel
         return forkJoin(repoRequests);
       })
     );

@@ -1,4 +1,4 @@
-import { Component, HostListener, linkedSignal, OnInit, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, linkedSignal, signal, ViewChild } from '@angular/core';
 import { GithubService } from '../../core/github.service';
 import { FormsModule } from '@angular/forms';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -22,6 +22,7 @@ const STORAGE_KEY = 'github-search';
 
 @Component({
   selector: 'app-repos',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     DatePipe,

@@ -1,4 +1,4 @@
-import { Component, HostListener, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GithubService } from '../../core/github.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -13,6 +13,7 @@ import { Commit } from '../../shared/models/commit.model';
 
 @Component({
   selector: 'app-commits',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatTableModule,FormsModule,MatFormFieldModule,RecursiveFilterPipe, MatInputModule,MatProgressBarModule, MatIconModule, MatTooltipModule],
   templateUrl: './commits.component.html',
   styleUrl: './commits.component.css'
@@ -30,7 +31,7 @@ export class CommitsComponent {
   hasMore = signal(true);
   searchText=signal("");
 
-  constructor(private route: ActivatedRoute, private github: GithubService, private router: Router) {}
+  constructor(private route: ActivatedRoute, private cdr: ChangeDetectorRef,private github: GithubService, private router: Router) {}
 
   ngOnInit() {
     this.owner = this.route.snapshot.paramMap.get('owner')!;
@@ -54,6 +55,7 @@ export class CommitsComponent {
           this.commits.set([...currentCommits, ...newCommits]);
           this.dataSource.data = this.commits();
           this.page++;
+          this.cdr.detectChanges();
         }
       })
      
